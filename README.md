@@ -25,17 +25,19 @@ Phase 1: Data Processing
 
     [Jakub Giezgała] Edge featurization (bond type, stereochemistry, ring status).
 
+    [Olek Janowiak] API for different methods to pocekt detection.
+
 Phase 2: The Deep Docking Pipeline
 
     [Jakub Giezgała] Sampler Module: Based on Tanimoto Clustering.
 
-    [Jakub Giezgała] Basic wrapper for Autodock Vina
+    [Jakub Giezgała] Basic wrapper for Autodock Vina.
 
     [Piotr Kupidura] Docking Wrapper: Seamless API integration with popular docking engines (Glide, Smina) to generate ground-truth training scores.
 
-    [Olek Janowiak] Find Testing data to compare with original Deep Docking Protocol
+    [Olek Janowiak] Find Testing data to compare with original Deep Docking Protocol.
 
-    [Jakub Giezgała & Piotr Kupidura] GNN Model Architectures and make ablations for example data
+    [Piotr Kupidura] GNN Model Architectures and make ablations for example data.
 
     [Piotr Kupidura] Iterative Active Learning: An iterative loop that trains the GNN, predicts scores, and requests exact docking for high-uncertainty (Monte Carlo Dropout).
 
