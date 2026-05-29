@@ -9,8 +9,8 @@ from __future__ import annotations
 
 from typing import Final
 
-from smiles_errors import SMILESParseError, SMILESValidationError
-from smiles_tokenizer import tokenize_smiles
+from smiles_processing.smiles_errors import SMILESParseError, SMILESValidationError
+from smiles_processing.smiles_tokenizer import tokenize_smiles
 
 # ---------------------------------------------------------------------------
 # Constants

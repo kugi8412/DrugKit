@@ -9,7 +9,7 @@ exception rather than being silently ignored.
 import re
 from typing import Final
 
-from smiles_errors import SMILESTokenizationError, SMILESValidationError, UnsupportedSMILESFeatureError
+from smiles_processing.smiles_errors import SMILESTokenizationError, SMILESValidationError, UnsupportedSMILESFeatureError
 
 # ---------------------------------------------------------------------------
 # Supported symbol sets
