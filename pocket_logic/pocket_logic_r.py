@@ -19,7 +19,6 @@ from pocket_logic.config_loader import (
 )
 
 from p2rank_stage import run_or_load_p2rank, add_p2rank_pockets
-from geneonet_stage import find_geneonet_file, should_use_geneonet, parse_geneonet_csv, add_geneonet_pockets
 from expert_knowledge import load_expert_df, add_expert_pockets
 
 
@@ -38,7 +37,9 @@ class PocketPipeline:
     def load_structure(self, s_cfg: StructureConfig):
         pdb_path = s_cfg.resolve_structure_path(self.project_cfg.data_dir)
         if not os.path.exists(pdb_path):
-            self.logger.error(f"[CRITICAL] PDB file not found for {s_cfg.conformation_key}: {pdb_path}")
+            self.logger.error(
+                f"[CRITICAL] PDB file not found for {s_cfg.conformation_key}: {pdb_path}"
+            )
             return None, pdb_path
 
         structure = self.parser.get_structure(s_cfg.conformation_key, pdb_path)
@@ -49,16 +50,9 @@ class PocketPipeline:
             pdb_path=pdb_path,
             output_dir=self.project_cfg.data_dir,
             p2rank_exec=self.pa_cfg.p2rank_path,
-            logger=self.logger
+            logger=self.logger,
         )
-
-        gn_file = find_geneonet_file(self.pa_cfg.geneonet_path, [s_cfg.pdb_id_lower, s_cfg.conformation_key])
-        use_gn = should_use_geneonet(s_cfg.pdb_id, gn_file)
-        gn_global = parse_geneonet_csv(gn_file) if use_gn else []
-        if not use_gn:
-            self.logger.info(f"{s_cfg.conformation_key}: GeneoNet disabled, using P2Rank only.")
-
-        return p2rank_global, gn_global
+        return p2rank_global
 
     def process_structure(self,
                           s_cfg: StructureConfig,
@@ -67,8 +61,10 @@ class PocketPipeline:
         if structure is None:
             return None
 
-        self.logger.info(f"Processing {s_cfg.conformation_key} (PDB: {s_cfg.pdb_id_lower}).")
-        p2rank_global, gn_global = self.load_global_predictors(s_cfg, pdb_path)
+        self.logger.info(
+            f"Processing {s_cfg.conformation_key} (PDB: {s_cfg.pdb_id_lower})."
+        )
+        p2rank_global = self.load_global_predictors(s_cfg, pdb_path)
 
         chain_pockets: List[dict] = []
         for chain_id in s_cfg.chains:
@@ -83,19 +79,7 @@ class PocketPipeline:
                 conformation=s_cfg.conformation,
                 buffer_size=self.pa_cfg.buffer_size,
                 p2rank_global=p2rank_global,
-                logger=self.logger
-            )
-
-            add_geneonet_pockets(
-                chain_pockets=chain_pockets,
-                structure=structure,
-                chain_id=chain_id,
-                gn_global=gn_global,
-                geneonet_top_n=self.pa_cfg.geneonet_top_n,
-                buffer_size=self.pa_cfg.buffer_size,
-                overlap_threshold=self.pa_cfg.overlap,
-                p2rank_global=p2rank_global,
-                logger=self.logger
+                logger=self.logger,
             )
 
             add_p2rank_pockets(
@@ -106,7 +90,7 @@ class PocketPipeline:
                 p2rank_top_n=self.pa_cfg.p2rank_top_n,
                 buffer_size=self.pa_cfg.buffer_size,
                 overlap_threshold=self.pa_cfg.overlap,
-                logger=self.logger
+                logger=self.logger,
             )
 
         return chain_pockets
