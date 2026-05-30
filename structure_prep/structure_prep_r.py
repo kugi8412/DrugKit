@@ -1,5 +1,6 @@
-# structure_rep.py
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# structure_prep/structure_prep_r.py
 
 import os
 import shutil

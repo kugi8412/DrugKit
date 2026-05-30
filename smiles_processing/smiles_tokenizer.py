@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # smiles_processing/smiles_tokenizer.py
 
 """Tokenizer for a subset of the SMILES string format.

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+# siamese_GNN/improved_train.py
 
 import os
 import random

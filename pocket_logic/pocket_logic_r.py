@@ -1,5 +1,6 @@
-# pocket_logic.py
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# pocket_logic/pocket_logic_r.py
 
 import os
 import json

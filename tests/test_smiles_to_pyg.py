@@ -1,4 +1,7 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # tests/test_smiles_to_pyg.py
+
 """Tests for smiles_to_pyg — PyG conversion and pipeline compatibility."""
 
 import pytest

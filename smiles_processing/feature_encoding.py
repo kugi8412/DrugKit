@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # smiles_processing/feature_encoding.py
 
 """Deterministic fixed-size feature encoding for GNN preprocessing.

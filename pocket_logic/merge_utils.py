@@ -1,5 +1,6 @@
-# pocket_logic/merge_utils.py
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# pocket_logic/merge_utils.py
 
 from typing import List
 import numpy as np

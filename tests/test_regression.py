@@ -1,4 +1,7 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # tests/test_regression.py
+
 """Regression and corpus tests — real-world SMILES, encoding consistency.
 
 These tests lock in the exact atom/bond counts and feature vectors for a

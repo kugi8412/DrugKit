@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # tests/test_rdkit_compare.py
 
 from rdkit import Chem

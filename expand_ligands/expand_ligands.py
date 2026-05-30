@@ -1,6 +1,6 @@
-# expand_ligands.py
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+# expand_ligands/expand_ligands.py
 
 import os
 import sys

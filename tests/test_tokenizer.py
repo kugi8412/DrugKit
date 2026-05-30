@@ -1,4 +1,7 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # tests/test_tokenizer.py
+
 """Tests for smiles_tokenizer — including bracket atom support and tolerant mode."""
 
 import pytest

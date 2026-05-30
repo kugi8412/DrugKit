@@ -1,5 +1,6 @@
-# pocket_logic/geneonet_stage.py
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# pocket_logic/geneonet_stage.py
 
 import os
 import logging

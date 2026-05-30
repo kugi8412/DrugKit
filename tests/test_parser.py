@@ -1,4 +1,7 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # tests/test_parser.py
+
 """Tests for smiles_parser — graph topology correctness."""
 
 import pytest

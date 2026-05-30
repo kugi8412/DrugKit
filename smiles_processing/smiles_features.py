@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # smiles_processing/smiles_features.py
 
 """Atom and bond feature extraction for GNN preprocessing.

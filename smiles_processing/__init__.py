@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # smiles_processing/__init__.py
 
 """DrugKit SMILES preprocessing package.

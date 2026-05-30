@@ -1,4 +1,6 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# docking_vina_etc/pocket_selection.py
 
 import os
 import pandas as pd

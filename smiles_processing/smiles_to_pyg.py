@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # smiles_processing/smiles_to_pyg.py
 
 """Shared preprocessing entry point: SMILES → torch_geometric.data.Data.

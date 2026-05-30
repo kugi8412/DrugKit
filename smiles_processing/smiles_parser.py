@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # smiles_processing/smiles_parser.py
 
 """Graph construction from a tokenized SMILES string.

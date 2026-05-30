@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # smiles_processing/smiles_errors.py
 
 """Custom exceptions for the DrugKit SMILES parser."""

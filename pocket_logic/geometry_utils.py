@@ -1,5 +1,6 @@
-# pocket_logic/geometry_utils.py
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# pocket_logic/geometry_utils.py
 
 from typing import List, Tuple, Set
 import numpy as np

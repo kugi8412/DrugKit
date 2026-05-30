@@ -1,5 +1,6 @@
-# pocket_logic/expert_knowledge.py
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# pocket_logic/expert_knowledge.py
 
 import os
 import re

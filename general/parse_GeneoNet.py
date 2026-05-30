@@ -1,5 +1,6 @@
-# general/parse_GeneoNet.py
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# general/parse_GeneoNet.py
 
 
 import re

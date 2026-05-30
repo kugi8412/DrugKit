@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # tests/test_feature_encoding.py
 """Tests for feature_encoding — dimension consistency and RDKit parity."""
 

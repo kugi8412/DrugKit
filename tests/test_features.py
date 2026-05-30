@@ -1,4 +1,7 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # tests/test_features.py
+
 from smiles_processing.smiles_parser import parse_smiles
 from smiles_processing.smiles_features import extract_features
 
