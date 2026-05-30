@@ -1,4 +1,4 @@
-# ipz_core/geometry_utils.py
+# pocket_logic/geometry_utils.py
 # -*- coding: utf-8 -*-
 
 from typing import List, Tuple, Set

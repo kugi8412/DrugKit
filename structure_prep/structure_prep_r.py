@@ -11,9 +11,9 @@ from typing import List, Union, Set, Dict
 from Bio.PDB import PDBIO, Select, NeighborSearch
 
 
-from ipz_core.logging_utils import setup_logging
-from ipz_core.config_loader import ConfigLoader, StructureConfig, ProjectConfig
-from ipz_core.structure_io import resolve_pdb_source, load_structure, check_alphaknot
+from pocket_logic.logging_utils import setup_logging
+from pocket_logic.config_loader import ConfigLoader, StructureConfig, ProjectConfig
+from pocket_logic.structure_io import resolve_pdb_source, load_structure, check_alphaknot
 
 
 # =========================

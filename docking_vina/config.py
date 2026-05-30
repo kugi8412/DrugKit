@@ -6,7 +6,7 @@ import sys
 import yaml
 from typing import Any, Dict
 
-from ipz_core.config_loader import ConfigLoader
+from pocket_logic.config_loader import ConfigLoader
 
 
 CONFIG_PATH = "config.yaml"

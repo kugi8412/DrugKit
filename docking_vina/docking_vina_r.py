@@ -4,7 +4,7 @@
 import os
 import sys
 
-from ipz_core.logging_utils import setup_logging
+from pocket_logic.logging_utils import setup_logging
 
 from docking_vina.config import CONFIG_PATH, read_yaml, merge_config, load_data_dir, compute_cpu
 from docking_vina.io_utils import ensure_dir, load_grids, build_receptor_map

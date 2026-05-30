@@ -6,8 +6,8 @@ import pandas as pd
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import Dict, Any, List
 
-from ipz_core.config_loader import ConfigLoader
-from ipz_core.logging_utils import setup_logging
+from pocket_logic.config_loader import ConfigLoader
+from pocket_logic.logging_utils import setup_logging
 
 from docking_vina_etc.fs_utils import ensure_dir
 from docking_vina_etc.grids_io import load_grids_json

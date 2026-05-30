@@ -6,8 +6,8 @@ from typing import Dict, Set, Tuple
 import numpy as np
 import pandas as pd
 
-from ipz_core.config_loader import ConfigLoader
-from ipz_core.logging_utils import setup_logging
+from pocket_logic.config_loader import ConfigLoader
+from pocket_logic.logging_utils import setup_logging
 
 
 REQUIRED_COLS = [

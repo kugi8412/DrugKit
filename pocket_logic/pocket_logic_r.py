@@ -9,8 +9,8 @@ from typing import List, Dict, Optional
 import pandas as pd
 from Bio.PDB import PDBParser
 
-from ipz_core.logging_utils import setup_logging
-from ipz_core.config_loader import (
+from pocket_logic.logging_utils import setup_logging
+from pocket_logic.config_loader import (
     ConfigLoader,
     ProjectConfig,
     PocketAnalysisConfig,

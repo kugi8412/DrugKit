@@ -1,4 +1,4 @@
-# ipz_core/geneonet_stage.py
+# pocket_logic/geneonet_stage.py
 # -*- coding: utf-8 -*-
 
 import os

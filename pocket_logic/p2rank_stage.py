@@ -1,4 +1,4 @@
-# ipz_core/p2rank_stage.py
+# pocket_logic/p2rank_stage.py
 # -*- coding: utf-8 -*-
 
 import os

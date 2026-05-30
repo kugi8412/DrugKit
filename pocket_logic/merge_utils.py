@@ -1,4 +1,4 @@
-# ipz_core/merge_utils.py
+# pocket_logic/merge_utils.py
 # -*- coding: utf-8 -*-
 
 from typing import List

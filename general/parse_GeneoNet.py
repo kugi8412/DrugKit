@@ -1,4 +1,4 @@
-# parse_GeneoNet.py
+# general/parse_GeneoNet.py
 # -*- coding: utf-8 -*-
 
 

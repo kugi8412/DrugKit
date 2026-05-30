@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from typing import Dict
-from ipz_core.config_loader import StructureConfig
+from pocket_logic.config_loader import StructureConfig
 
 
 def build_target_to_protein_map(structures: Dict[str, StructureConfig]) -> Dict[str, str]:

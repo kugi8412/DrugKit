@@ -1,4 +1,4 @@
-# ipz_core/expert_knowledge.py
+# pocket_logic/expert_knowledge.py
 # -*- coding: utf-8 -*-
 
 import os
