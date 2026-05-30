@@ -1,3 +1,5 @@
+# smiles_processing/smiles_parser.py
+
 """Graph construction from a tokenized SMILES string.
 
 Converts the flat token list produced by :mod:`smiles_tokenizer` into a

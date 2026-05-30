@@ -1,3 +1,5 @@
+# smiles_processing/smiles_tokenizer.py
+
 """Tokenizer for a subset of the SMILES string format.
 
 Converts a raw SMILES string into a flat list of typed tokens that the

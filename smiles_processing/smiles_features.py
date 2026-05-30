@@ -1,3 +1,5 @@
+# smiles_processing/smiles_features.py
+
 """Atom and bond feature extraction for GNN preprocessing.
 
 Takes the raw molecular graph produced by :func:`smiles_parser.parse_smiles`
