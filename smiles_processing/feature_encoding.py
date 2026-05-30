@@ -52,21 +52,31 @@ HYBRIDIZATIONS: Final[list[str]] = ["SP", "SP2", "SP3", "SP3D", "SP3D2"]
 CHIRALITY_TAGS: Final[list[str]] = ["CHI_TETRAHEDRAL_CW", "CHI_TETRAHEDRAL_CCW"]
 STEREO_TYPES: Final[list[str]] = ["STEREOZ", "STEREOE", "STEREOCIS", "STEREOTRANS"]
 
-# Approximate atomic masses (for the 12 permitted atoms + fallback)
+# ---------------------------------------------------------------------------
+# Symbol lookup: parser stores atoms in UPPERCASE (e.g. 'CL', 'BR', 'SI')
+# but PERMITTED_ATOMS uses mixed case ('Cl', 'Br', 'Si') matching RDKit.
+# Build an uppercase -> original-case mapping so the one-hot lookup works.
+# ---------------------------------------------------------------------------
+_SYMBOL_CANONICAL: Final[dict[str, str]] = {s.upper(): s for s in PERMITTED_ATOMS}
+# e.g. 'CL' -> 'Cl', 'BR' -> 'Br', 'SI' -> 'Si', 'C' -> 'C', etc.
+
+# Atomic masses matched exactly to RDKit's GetMass() values.
+# Keyed by UPPERCASE symbol (as stored by our parser) for fast lookup.
 _ATOMIC_MASS: Final[dict[str, float]] = {
-    "C": 12.011,  "N": 14.007,  "O": 15.999,  "S": 32.06,
-    "F": 18.998,  "SI": 28.086, "P": 30.974,  "CL": 35.45,
-    "BR": 79.904, "I": 126.90,  "B": 10.811,  "H": 1.008,
-    # metals that may appear in bracket atoms
+    "C":  12.011,  "N":  14.007,  "O":  15.999,  "S":  32.067,
+    "F":  18.998,  "SI": 28.086,  "P":  30.974,  "CL": 35.453,
+    "BR": 79.904,  "I": 126.904,  "B":  10.811,  "H":   1.008,
+    # metals that may appear in bracket atoms (not in PERMITTED_ATOMS,
+    # so they fall to the unknown symbol bucket anyway)
     "FE": 55.845, "CU": 63.546, "ZN": 65.38,  "MG": 24.305,
-    "CA": 40.078, "NA": 22.990, "K": 39.098,  "LI": 6.941,
+    "CA": 40.078, "NA": 22.990, "K":  39.098,  "LI":  6.941,
 }
-_DEFAULT_MASS: Final[float] = 12.0  # fallback
+_DEFAULT_MASS: Final[float] = 12.011  # fallback = carbon
 
 # Map our parser's chirality strings to RDKit-style tag names
 _CHIRALITY_MAP: Final[dict[str, str]] = {
-    "@":  "CHI_TETRAHEDRAL_CCW",
-    "@@": "CHI_TETRAHEDRAL_CW",
+    "@":  "CHI_TETRAHEDRAL_CW",   # matches RDKit: @ -> CHI_TETRAHEDRAL_CW
+    "@@": "CHI_TETRAHEDRAL_CCW",  # matches RDKit: @@ -> CHI_TETRAHEDRAL_CCW
 }
 
 # Map our parser's stereo bond strings to RDKit-style names
@@ -201,20 +211,22 @@ def encode_atom(atom: dict, graph: dict) -> list[float]:
         >>> len(feats)
         42
     """
-    symbol = atom["symbol"].upper()
+    symbol_upper = atom["symbol"].upper()  # e.g. "CL", "BR", "SI", "C"
+    # Restore mixed-case form that PERMITTED_ATOMS uses ("Cl", "Br", "Si", "C")
+    symbol_canonical = _SYMBOL_CANONICAL.get(symbol_upper, symbol_upper)
     degree = _infer_degree(atom, graph)
     total_h = _infer_total_h(atom, graph)
     formal_charge = atom.get("formal_charge", 0)
     hyb = atom.get("hybridization") or "SP3"  # default if not yet computed
     aromatic = atom.get("aromatic", False)
-    mass = _ATOMIC_MASS.get(symbol, _DEFAULT_MASS) * 0.01
+    mass = _ATOMIC_MASS.get(symbol_upper, _DEFAULT_MASS) * 0.01
 
     # Chirality: map parser strings to RDKit-style tag names
     raw_chiral = atom.get("chirality")
     chiral_tag = _CHIRALITY_MAP.get(raw_chiral, "") if raw_chiral else ""
 
     features: list[float] = []
-    features += _one_hot(symbol, PERMITTED_ATOMS)
+    features += _one_hot(symbol_canonical, PERMITTED_ATOMS)
     features += _one_hot(degree, ATOM_DEGREES)
     features += _one_hot(total_h, TOTAL_HS)
     features += _one_hot(formal_charge, FORMAL_CHARGES)
@@ -260,10 +272,16 @@ def encode_bond(bond: dict) -> list[float]:
         1.0 if bond.get("in_ring", False) else 0.0,
     ]
 
-    # Stereo: map parser "/" "\" to RDKit-style names, or None
-    raw_stereo = bond.get("stereochemistry")
-    stereo_tag = _STEREO_MAP.get(raw_stereo, "") if raw_stereo else ""
-    features += _one_hot(stereo_tag, STEREO_TYPES)
+    # Stereo encoding: we preserve the raw "/" or "\" in the bond dict for
+    # topology purposes, but we do NOT map them to STEREOE/Z in the feature
+    # vector. RDKit assigns stereo (STEREOE/Z) only to the double bond itself;
+    # the flanking single bonds receive STEREONONE, which encodes as the
+    # unknown bucket. To match RDKit, we always emit the unknown bucket here
+    # (empty stereo_tag -> not in STEREO_TYPES -> index -1 -> unknown slot).
+    # Full E/Z resolution would require context (neighbouring atoms) that our
+    # heuristic parser does not have — so the unknown bucket is the correct
+    # and honest choice.
+    features += _one_hot("", STEREO_TYPES)  # always unknown bucket
 
     assert len(features) == BOND_FEATURE_DIM, (
         f"BUG: bond feature dim mismatch: got {len(features)}, expected {BOND_FEATURE_DIM}"

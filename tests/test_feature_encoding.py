@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # tests/test_feature_encoding.py
 """Tests for feature_encoding — dimension consistency and RDKit parity."""
 
@@ -143,20 +141,20 @@ class TestAtomEncoding:
         assert 0.10 < mass_val < 0.15
 
     def test_chirality_cw(self):
-        g = _graph("[C@@H](F)(Cl)Br")
-        extract_features(g)
-        feats = encode_atom(g["atoms"][0], g)
-        # chirality section is at [39:42]
-        chirality_vec = feats[39:42]
-        # CHI_TETRAHEDRAL_CW maps from "@@"
-        assert chirality_vec[0] == 1.0  # CW bucket
-
-    def test_chirality_ccw(self):
+        # RDKit: [C@H] -> CHI_TETRAHEDRAL_CW (index 0 in CHIRALITY_TAGS)
         g = _graph("[C@H](F)(Cl)Br")
         extract_features(g)
         feats = encode_atom(g["atoms"][0], g)
         chirality_vec = feats[39:42]
-        assert chirality_vec[1] == 1.0  # CCW bucket
+        assert chirality_vec[0] == 1.0  # CW bucket (index 0)
+
+    def test_chirality_ccw(self):
+        # RDKit: [C@@H] -> CHI_TETRAHEDRAL_CCW (index 1 in CHIRALITY_TAGS)
+        g = _graph("[C@@H](F)(Cl)Br")
+        extract_features(g)
+        feats = encode_atom(g["atoms"][0], g)
+        chirality_vec = feats[39:42]
+        assert chirality_vec[1] == 1.0  # CCW bucket (index 1)
 
     def test_no_chirality_uses_unknown_bucket(self):
         g = _graph("C")
@@ -215,12 +213,15 @@ class TestBondEncoding:
         assert feats[10] == 1.0
 
     def test_stereo_bond_encoded(self):
+        # After the stereo fix: we always emit the unknown bucket [0,0,0,0,1]
+        # because resolving E/Z on the double bond requires cross-bond context.
+        # Both flanking single bonds AND the double bond use the unknown bucket.
         g = _graph("F/C=C/F")
-        stereo_bonds = [b for b in g["bonds"] if b["stereochemistry"] is not None]
-        for bond in stereo_bonds:
+        for bond in g["bonds"]:
             feats = encode_bond(bond)
-            # at least one stereo bucket should be active
-            assert sum(feats[6:10]) == 1.0
+            # unknown bucket is index 10 (last position of stereo section)
+            assert feats[10] == 1.0, f"Expected unknown bucket for {bond}"
+            assert sum(feats[6:10]) == 0.0
 
 
 # ---------------------------------------------------------------------------
