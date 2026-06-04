@@ -1,13 +1,21 @@
 # docking_vina.py
 # -*- coding: utf-8 -*-
 
-import os
 import sys
+from pathlib import Path
+
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+import os
 
 from pocket_logic.logging_utils import setup_logging
 
-from docking_vina.config import CONFIG_PATH, read_yaml, merge_config, load_data_dir, compute_cpu
-from docking_vina.io_utils import ensure_dir, load_grids, build_receptor_map
+from docking_common.config_utils import compute_cpu, load_data_dir, read_yaml
+from docking_common.io_utils import ensure_dir, load_grids
+from docking_vina.config import CONFIG_PATH, merge_config
+from docking_vina.io_utils import build_receptor_map_pdbqt as build_receptor_map
 from docking_vina.pipeline import run_baseline, run_candidates, save_results_and_summary
 
 
@@ -27,7 +35,7 @@ def main() -> None:
     candidates_file = cfg_dock.get("candidates_file")
 
     base_exhaustiveness = int(cfg_dock.get("exhaustiveness", 8))
-    n_cpu = compute_cpu(cfg_dock)
+    n_cpu = compute_cpu(cfg_dock, key="n_poses")
 
     output_dir = os.path.dirname(output_results)
     output_poses_dir = os.path.join(output_dir, "top_poses")

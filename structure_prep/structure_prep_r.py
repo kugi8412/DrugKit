@@ -3,9 +3,15 @@
 # structure_prep/structure_prep_r.py
 
 import os
+import sys
 import shutil
 import subprocess
 import logging.handlers
+from pathlib import Path
+
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
 from typing import List, Union, Set, Dict
 

@@ -10,8 +10,8 @@ from typing import List, Tuple, Set, Optional, Any
 import numpy as np
 import pandas as pd
 
-from p2rank_stage import validate_quality
-from geometry_utils import get_residue_coords, calculate_centered_box
+from pocket_logic.p2rank_stage import validate_quality
+from pocket_logic.geometry_utils import get_residue_coords, calculate_centered_box
 
 
 def load_expert_df(pockets_csv: str) -> pd.DataFrame:

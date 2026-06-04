@@ -21,3 +21,17 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
+
+*.pdb
+*.pdbqt
+*.sdf
+*.mol2
+*.mol
+*.smi
+*.smiles
+*.csv
+*.txt
+*.log
+*.json
+*.pyc
+config.yaml

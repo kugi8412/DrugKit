@@ -26,6 +26,8 @@ dependencies:
   - rdkit
   - openbabel
   - vina
+  - smina
+  - gemmi
 
   # PyTorch
   - pytorch

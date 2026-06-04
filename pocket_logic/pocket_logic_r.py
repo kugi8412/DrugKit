@@ -3,9 +3,15 @@
 # pocket_logic/pocket_logic_r.py
 
 import os
+import sys
 import json
 import logging
+from pathlib import Path
 from typing import List, Dict, Optional
+
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
 import pandas as pd
 from Bio.PDB import PDBParser
@@ -18,8 +24,8 @@ from pocket_logic.config_loader import (
     StructureConfig,
 )
 
-from p2rank_stage import run_or_load_p2rank, add_p2rank_pockets
-from expert_knowledge import load_expert_df, add_expert_pockets
+from pocket_logic.p2rank_stage import run_or_load_p2rank, add_p2rank_pockets
+from pocket_logic.expert_knowledge import load_expert_df, add_expert_pockets
 
 
 class PocketPipeline:
@@ -115,7 +121,7 @@ class PocketPipeline:
 
 
 def main():
-    logger = setup_logging()
+    logger = setup_logging(log_dir="logs", log_file="pocket_logic.log")
 
     loader = ConfigLoader("config.yaml")
     project_cfg = loader.project()

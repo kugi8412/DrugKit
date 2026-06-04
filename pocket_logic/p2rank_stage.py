@@ -11,8 +11,8 @@ from typing import List, Dict, Set, Optional, Any
 import numpy as np
 import pandas as pd
 
-from geometry_utils import get_residue_coords, calculate_centered_box
-from merge_utils import is_duplicate
+from pocket_logic.geometry_utils import get_residue_coords, calculate_centered_box
+from pocket_logic.merge_utils import is_duplicate
 
 
 def run_or_load_p2rank(pdb_path: str,

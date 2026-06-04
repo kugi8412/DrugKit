@@ -4,6 +4,12 @@
 
 import os
 import sys
+from pathlib import Path
+
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
 import yaml
 import time
 import warnings
@@ -263,6 +269,11 @@ def main():
     logger.info(f"Loaded {len(df)} seeds. Use columns: Name, Role, Target.")
     client = get_smallworld_client()
     if not client:
+        fallback = config["ligand_expansion"].get("output_smiles", "data/candidates.csv")
+        if os.path.exists(fallback):
+            logger.warning("SmallWorld unavailable; keeping existing candidates file.")
+            return
+        logger.error("SmallWorld unavailable and no candidates file to fall back to.")
         return None
 
     expanded_pool: Dict = {}
