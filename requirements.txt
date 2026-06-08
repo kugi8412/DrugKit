@@ -1,0 +1,28 @@
+# Core scientific
+numpy>=1.24
+pandas>=1.5
+scipy>=1.10
+scikit-learn>=1.2
+tqdm>=4.60
+pyyaml>=6.0
+requests>=2.28
+
+# Chemistry
+rdkit>=2023.03
+biopython>=1.81
+meeko>=0.5
+
+# Deep Learning
+torch>=2.0
+torch-geometric>=2.3
+
+# Optional: docking
+# vina>=1.2
+
+# Optional: ligand expansion
+# pubchempy>=1.0
+# smallworld-api>=1.0
+
+# Dev
+pytest>=7.0
+pytest-cov>=4.0
