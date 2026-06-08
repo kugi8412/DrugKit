@@ -2,14 +2,16 @@
 
 Complete guide for using DrugKit: a GNN-Powered Deep Docking framework for accelerated virtual screening.
 
+## WORK IN PROGRESS!
+By the end of Wednesday, we’ll be working together to produce results using sample data, so we can see how the pipeline works in practice.
+This may potentially require minor changes to the code.
+
 ## Installation
 
 ### From TestPyPI
 
 ```bash
-pip install --index-url https://test.pypi.org/simple/ \
-    --extra-index-url https://pypi.org/simple/ \
-    drugkit
+pip install -i https://test.pypi.org/simple/ drugkit==0.1.1
 ```
 
 ### From Source (Development)
