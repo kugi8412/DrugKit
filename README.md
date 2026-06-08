@@ -17,32 +17,54 @@ DrugKit modernizes this approach by treating molecules as graphs (atoms as nodes
 
 Phase 1: Data Processing
 
-    [Olek Janowiak] Integration with RDKit to parse SMILES strings improve some functions.
+    [OK] Integration with RDKit to parse SMILES strings improve some functions.
 
-    [Jakub Giezgała] Conversion of SMILES into PyTorch Geometric.
+    [OK] Conversion of SMILES into PyTorch Geometric.
 
-    [Jakub Giezgała] Node featurization (atom type, hybridization, formal charge, chirality).
+    [OK] Node featurization (atom type, hybridization, formal charge, chirality).
 
-    [Jakub Giezgała] Edge featurization (bond type, stereochemistry, ring status).
+    [OK] Edge featurization (bond type, stereochemistry, ring status).
 
-    [Olek Janowiak] API for different methods to pocekt detection.
+    [OK] API for different methods to pocekt detection.
 
 Phase 2: The Deep Docking Pipeline
 
-    [Jakub Giezgała] Sampler Module: Based on Tanimoto Clustering.
+    [OK] Sampler Module: Based on Tanimoto Clustering.
 
-    [Jakub Giezgała] Basic wrapper for Autodock Vina.
+    [OK] Basic wrapper for Autodock Vina.
 
-    [Piotr Kupidura] Docking Wrapper: Seamless API integration with popular docking engines (Glide, Smina) to generate ground-truth training scores.
+    [OK] Docking Wrapper: Seamless API integration with popular docking engines (Glide, Smina) to generate ground-truth training scores.
 
-    [Olek Janowiak] Find Testing data to compare with original Deep Docking Protocol.
+    [OK] Find Testing data to compare with original Deep Docking Protocol.
 
-    [Piotr Kupidura] GNN Model Architectures and make ablations for example data.
+    [OK] GNN Model Architectures and make ablations for example data.
 
-    [Piotr Kupidura] Iterative Active Learning: An iterative loop that trains the GNN, predicts scores, and requests exact docking for high-uncertainty (Monte Carlo Dropout).
+    [OK] Iterative Active Learning: An iterative loop that trains the GNN, predicts scores, and requests exact docking for high-uncertainty (Monte Carlo Dropout).
 
 Phase 3: Billion-Scale Inference
 
-    [Olek Janowiak] Batch processing pipeline for massive SMILES datasets.
+    [OK] Batch processing pipeline for massive SMILES datasets.
 
-    [Piotr Kupidura] Multi-GPU inference support.
+    [OK] Multi-GPU inference support.
+
+## Installation
+
+### From TestPyPI
+
+```bash
+pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ drugkit
+```
+
+### Development (editable)
+
+```bash
+conda env create -f config/drugkit.yaml -n drugkit
+conda activate drugkit
+pip install -e ".[dev]"
+```
+
+## Running Tests
+
+```bash
+pytest tests/ -v
+```
