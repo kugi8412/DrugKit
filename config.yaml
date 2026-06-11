@@ -1,0 +1,73 @@
+# DrugKit Configuration — HIV-1 Protease (1HSG) Experiment
+
+project:
+  data_dir: "data"
+
+# Pocket detection
+pocket_analysis:
+  p2rank_path: "p2rank"
+  p2rank_top_n: 3
+  buffer_size: 4.0
+  grids_file: "data/docking_grids.json"
+
+# Ligand expansion (SmallWorld API)
+ligand_expansion:
+  input_csv: "data/seed_ligands.csv"
+  output_smiles: "data/candidates.csv"
+  max_analogs_per_seed: 50
+  clustering_cutoff: 0.5
+  lipinski_strict: true
+  api_delay: 2.0
+  filters:
+    min_mw: 150
+    max_mw: 500
+    min_logp: -1.0
+    max_logp: 5.0
+
+# Active Learning
+active_learning:
+  pool_file: "data/pool.csv"
+  seed_file: "data/seed_ligands.csv"
+  grids_file: "data/docking_grids.json"
+  on_targets: ["HIVPRO_1HSG"]
+  off_targets: []
+  rounds: 5
+  seed_size: 5
+  acquisition_batch: 10
+  mc_samples: 20
+  epochs: 40
+  batch_size: 32
+  learning_rate: 0.0004
+  hidden_dim: 128
+  dropout: 0.3
+  elite_count: 5
+  elite_penalty: 5.0
+  val_target_ratio: 0.15
+  seed: 42
+  smina_exe: "smina"
+  exhaustiveness: 8
+  num_modes: 1
+  n_cpu: 4
+  default_baseline: -7.0
+  output_dir: "output/active_learning"
+
+# Smina docking
+docking_smina:
+  known_compounds: "data/known_compounds.csv"
+  candidates_file: "data/pool.csv"
+  grids_file: "data/docking_grids.json"
+  results_file: "output/docking_smina_results.csv"
+  smina_exe: "smina"
+  exhaustiveness: 8
+  num_modes: 1
+  n_cpu: 4
+  default_baseline: -7.0
+
+# Vina docking
+docking_vina:
+  receptor_dir: "data"
+  grids_file: "data/docking_grids.json"
+  results_file: "output/docking_vina_results.csv"
+  exhaustiveness: 8
+  num_modes: 1
+  n_cpu: 4
