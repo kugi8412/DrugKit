@@ -314,3 +314,6 @@ pytest tests/test_pipeline_integration.py -v
 | `final_docking` | Final validation docking |
 | `structure_prep` | PDB structure preparation |
 | `summarizer` | Selectivity aggregation |
+
+## Try your own
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kugi8412//DrugKit/blob/main/DrugKit.ipynb)
