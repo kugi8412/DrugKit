@@ -98,8 +98,8 @@ def get_smallworld_client() -> Optional[SmallWorld]:
 
 def query_smallworld_robust(smiles: str,
                             client: SmallWorld,
-                            distance: int = 25,
-                            database_1: str = "REAL_dataset",
+                            distance: int = 15,
+                            database_1: str = "REAL-Database-22Q1.smi.anon",
                             database_2: str = "REALDB-2025-07.smi.anon"
                             ) -> List[str]:
     """ Querying selected databases (database_1 > database_2) with
@@ -107,32 +107,32 @@ def query_smallworld_robust(smiles: str,
     """
     if client is None:
         return []
-    else:
-        database = getattr(client, database_1, None) or database_2
-    
-    # Multiple retries (Idea of the D4S1[https://github.com/D4S1] concept)
-    for attempt in range(1, 5):
+        
+    logger.debug(f"Pinging SmallWorld API for: {smiles}")
+
+    for attempt in range(1, 4):
         try:
-            with warnings.catch_warnings():
-                warnings.filterwarnings("ignore")
-                results = client.search(smiles, db=database, dist=distance, length=MAX_ANALOGS_PER_SEED)
+            results = client.search(smiles, db=database_1, dist=distance, length=MAX_ANALOGS_PER_SEED)
             
             if results is None:
-                raise ValueError("API None")
-            
+                continue
+                
             if isinstance(results, pd.DataFrame):
                 if results.empty:
                     return []
-
-                # Most popular databases
-                cols = ["smiles", "SMILES", "hitSmiles", "hit_smiles"]
+                
+                cols = ["smiles", "SMILES", "hitSmiles", "hit_smiles", "hit"]
                 f_col = next((c for c in cols if c in results.columns), results.columns[0])
                 return results[f_col].dropna().astype(str).tolist()
-                
+            
+            if isinstance(results, list) and len(results) > 0 and isinstance(results[0], dict):
+                 return [str(item.get("hitSmiles", item.get("smiles", ""))) for item in results]
+
             return [str(results)]
 
-        except Exception:
-            time.sleep(2.0 * attempt)
+        except Exception as e:
+            logger.warning(f"Attempt {attempt} failed: {str(e)}")
+            time.sleep(3.0 * attempt)
 
     return []
 

@@ -157,10 +157,10 @@ drugkit-featurize --input data/pool.csv --output output/pool_graphs.pt --encoder
 drugkit-featurize --input data/pool.csv --validate
 
 # Use custom RDKit-free encoder
-drugkit-featurize --input data/pool.csv --output output/graphs_custom.pt --encoder custom
+# drugkit-featurize --input data/pool.csv --output output/graphs_custom.pt --encoder custom
 
 # Featurize inline SMILES
-drugkit-featurize --smiles "CCO" "c1ccccc1" "CC(=O)O" --output output/test.pt
+# drugkit-featurize --smiles "CCO" "c1ccccc1" "CC(=O)O" --output output/test.pt
 ```
 
 ### Python API
@@ -205,19 +205,17 @@ graphs, names, failed = run_featurize(
 ### CLI
 
 ```bash
-# Dock against a receptor
-drugkit-dock --receptor data/TARGET_A.pdbqt --ligands data/pool.csv \
-    --center 12.5,34.2,8.7 --exhaustiveness 16 --n-cpu 8
+# Convert to pdbqt
+cd data
+obabel HIVPRO_1HSG.pdb -O HIVPRO_1HSG.pdbqt -p 7.4 --partialcharge gasteiger
+cd ..
 
-# Use Vina instead of Smina
-drugkit-dock --receptor data/TARGET_A.pdbqt --ligands data/pool.csv \
-    --center 12.5,34.2,8.7 --engine vina
+# Smina
+wget https://sourceforge.net/projects/smina/files/smina.static/download -O smina
+chmod +x smina
 
 # Use grid definitions from JSON
-drugkit-dock --grids data/docking_grids.json --ligands data/pool.csv
-
-# Score-only mode (existing poses)
-drugkit-dock --receptor target.pdbqt --ligands ligands_dir/ --score-only
+drugkit-dock --grids data/docking_grids.json --ligands data/pool.csv --smina-exe /home/jgiezgala/DrugKit/smina
 ```
 
 ### Python API
@@ -261,8 +259,11 @@ result_path = run_dock(
 ### CLI
 
 ```bash
+# Fast train
+drugkit-train --labeled output/docking_results.csv --output models/model.pth --epochs 5 --score-col Energy
+
 # Train with defaults
-drugkit-train --labeled data/labeled.csv --output models/model.pth
+drugkit-train --labeled output/docking_results.csv --output models/model.pth
 
 # Custom hyperparameters
 drugkit-train --labeled data/labeled.csv --output models/model.pth \
@@ -596,7 +597,7 @@ echo "=== Step 6: Score expanded library ==="
 drugkit-predict --model models/model.pth --input output/expanded.csv \
     --output output/final_ranked.csv --mc-samples 20 --top-k 50
 
-echo "=== Done! Final candidates in output/final_ranked.csv ==="
+echo "=== Final candidates in output/final_ranked.csv ==="
 ```
 
 Or equivalently in Python:

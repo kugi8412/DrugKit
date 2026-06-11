@@ -36,6 +36,41 @@ from typing import Optional, Tuple
 import numpy as np
 
 
+def _dock_one_smina_global(record, target, pocket, receptor_path, exhaustiveness, smina_exe, n_poses):
+    """
+    Pomocnicza funkcja globalna dla Sminy, wyciągnięta na zewnątrz run_dock,
+    aby multiprocessing (ProcessPoolExecutor) mógł ją poprawnie zserializować (pickle).
+    """
+    from docking_common.ligands import prepare_ligand
+    from docking_smina.smina_engine import run_smina_scoring
+
+    pdbqt_str = record.get("_pdbqt")
+    if not pdbqt_str:
+        prep = prepare_ligand(record["SMILES"], record["Name"])
+        if prep is None:
+            return None
+        pdbqt_str = prep[0]
+
+    energy, _ = run_smina_scoring(
+        receptor_path=receptor_path,
+        pdbqt_ligand=pdbqt_str,
+        center=pocket["center"],
+        size=pocket["size"],
+        base_exhaustiveness=exhaustiveness,
+        smina_exe=smina_exe,
+        num_modes=n_poses,
+        cpu=1,
+    )
+    print(f"[{record['Name']}] Obliczona energia: {energy}")
+    return {
+        "Name": record["Name"],
+        "SMILES": record.get("SMILES", ""),
+        "Target": target,
+        "Pocket_ID": pocket["id"],
+        "Energy": energy,
+    }
+
+
 def run_dock(
     receptor: Optional[str] = None,
     ligands: Optional[str] = None,
@@ -159,41 +194,22 @@ def run_dock(
     results = []
 
     if engine == "smina":
-        from docking_smina.smina_engine import run_smina_scoring
-
-        def _dock_one_smina(record, target, pocket):
-            pdbqt_str = record.get("_pdbqt")
-            if not pdbqt_str:
-                prep = prepare_ligand(record["SMILES"], record["Name"])
-                if prep is None:
-                    return None
-                pdbqt_str = prep[0]
-
-            energy, _ = run_smina_scoring(
-                receptor_path=rec_map[target],
-                pdbqt_ligand=pdbqt_str,
-                center=pocket["center"],
-                size=pocket["size"],
-                base_exhaustiveness=exhaustiveness,
-                smina_exe=smina_exe,
-                num_modes=n_poses,
-                cpu=1,
-            )
-            return {
-                "Name": record["Name"],
-                "SMILES": record.get("SMILES", ""),
-                "Target": target,
-                "Pocket_ID": pocket["id"],
-                "Energy": energy,
-            }
-
         with ProcessPoolExecutor(max_workers=n_cpu) as executor:
             futures = []
             for rec in ligand_records:
                 for target, pockets in grids.items():
                     for pocket in pockets:
                         futures.append(
-                            executor.submit(_dock_one_smina, rec, target, pocket)
+                            executor.submit(
+                                _dock_one_smina_global,
+                                rec,
+                                target,
+                                pocket,
+                                rec_map[target],
+                                exhaustiveness,
+                                smina_exe,
+                                n_poses
+                            )
                         )
             for fut in as_completed(futures):
                 r = fut.result()
