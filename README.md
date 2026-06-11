@@ -1,5 +1,7 @@
 # DrugKit — Usage Guide
 
+<img src="./logo.png" alt="Logo" width="750"/></td>
+
 Complete guide for using DrugKit: a GNN-Powered Deep Docking framework for accelerated virtual screening.
 
 ## Installation
