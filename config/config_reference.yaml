@@ -1,0 +1,120 @@
+# ==============================================================================
+# DrugKit Configuration File — Complete Reference
+# ==============================================================================
+# Copy this file to your project root as `config.yaml` and modify as needed.
+# All parameters shown here are at their DEFAULT values.
+# Remove or comment out any you don't need to change.
+# ==============================================================================
+
+# === Project Settings ===
+project:
+  data_dir: "data"
+
+# === Structure Preparation ===
+structures:
+  # Define each protein conformation to dock against.
+  # Key = conformation identifier (used as target name in pipeline)
+  #
+  # Example:
+  # SLC6A20:
+  #   protein_key: "SLC6A"             # Protein family name
+  #   conformation_key: "SLC6A20"      # Unique conformation ID
+  #   pdb_id: "8I91"                   # PDB ID (for auto-download)
+  #   pdb_path: "data/8I91.pdb"        # Or explicit local path
+  #   chains: ["A"]                    # Chains of interest
+  #   hydrogen_cutoff: 3.5             # H-bond distance threshold (Å)
+  #
+  # SLC6A19:
+  #   protein_key: "SLC6A"
+  #   conformation_key: "SLC6A19"
+  #   pdb_id: "8I92"
+  #   chains: ["A"]
+
+# === Pocket Detection ===
+pocket_analysis:
+  p2rank_path: "p2rank"                # Path to P2Rank executable
+  geneonet_path: "geneonet"            # Path to GeneoNet executable (optional)
+  pockets_csv: "data/pockets.csv"      # Output: detected pockets
+  buffer_size: 4.0                     # Box padding around pocket (Å)
+  overlap: 5.0                         # Merge pockets within this distance (Å)
+  p2rank_top_n: 5                      # Number of P2Rank pockets to keep
+  geneonet_top_n: 5                    # Number of GeneoNet pockets to keep
+  grids_file: "docking_grids.json"     # Output: docking grid definitions
+
+# === Ligand Expansion ===
+ligand_expansion:
+  input_csv: "data/seed_ligands.csv"   # Seed molecules to expand
+  output_smiles: "data/candidates.csv" # Output: expanded candidate pool
+  max_analogs_per_seed: 50             # Max analogs per seed molecule
+  clustering_cutoff: 0.5               # Tanimoto distance for clustering
+  api_delay: 2.0                       # Seconds between SmallWorld API calls
+  lipinski_strict: true                # true = zero Lipinski violations allowed
+
+  # Drug-likeness filters
+  filters:
+    min_mw: 150                        # Minimum molecular weight (Da)
+    max_mw: 500                        # Maximum molecular weight (Da)
+    min_logp: -1.0                     # Minimum logP
+    max_logp: 5.0                      # Maximum logP
+
+  # Veber's rules
+  veber_tpsa_cutoff: 140.0             # Max topological polar surface area (Å²)
+  veber_rotatable_cutoff: 10           # Max rotatable bonds
+
+# === Active Learning Pipeline ===
+active_learning:
+  pool_file: "data/pool.csv"           # Candidate SMILES library (CSV: Name, SMILES)
+  seed_file: "data/seed_ligands.csv"   # Known binders for bootstrap (CSV: Name, SMILES)
+  grids_file: "docking_grids.json"     # Pocket grid definitions
+
+  # === Target Definition ===
+  on_targets:                          # Desired binding targets (list)
+    - "SLC6A20"
+  off_targets:                         # Avoid binding here (selectivity)
+    - "SLC6A19"
+
+  # === Active Learning Loop ===
+  rounds: 5                            # Number of AL iterations
+  seed_size: 20                        # Seed compounds to dock initially
+  acquisition_batch: 10                # Compounds to dock per round
+  mc_samples: 30                       # MC Dropout forward passes
+
+  # === GNN Model Training ===
+  epochs: 40                           # Training epochs per round
+  batch_size: 32                       # Training batch size
+  learning_rate: 0.0004                # Adam learning rate
+  hidden_dim: 128                      # GNN hidden layer dimension
+  dropout: 0.3                         # Dropout probability
+  elite_count: 10                      # Top compounds to upweight in training
+  elite_penalty: 5.0                   # Weight multiplier for elite compound pairs
+  val_target_ratio: 0.15               # Fraction used for validation (cluster-aware)
+  seed: 42                             # Random seed for reproducibility
+
+  # === Docking Engine ===
+  smina_exe: "smina"                   # Path to Smina binary (or "vina")
+  exhaustiveness: 8                    # Docking search thoroughness (8-128)
+  num_modes: 1                         # Docking poses per compound
+  n_cpu: 4                             # Parallel docking workers
+  default_baseline: -7.0               # Energy threshold for "hit" (kcal/mol)
+
+  # === Output ===
+  output_dir: "output/active_learning" # Results directory
+
+# === Smina Docking ===
+docking_smina:
+  known_compounds: "data/known_compounds.csv"
+  candidates_file: "data/candidates.csv"
+  grids_file: "docking_grids.json"
+  results_file: "output/docking_smina_results.csv"
+  smina_exe: "smina"
+  exhaustiveness: 16
+  num_modes: 1
+  n_cpu: 4
+  default_baseline: -7.0
+
+# === Inference (Billion-Scale Scoring) ===
+inference:
+  inference_batch_size: 512            # Batch size for GPU inference
+  inference_chunk_size: 50000          # Compounds per streaming chunk
+  inference_mc_samples: 0              # MC Dropout samples (0 = deterministic)
+  gpu_ids: null                        # GPU device IDs (null = all available)

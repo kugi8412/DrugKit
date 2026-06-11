@@ -1,0 +1,50 @@
+name: drugkit
+channels:
+  - pytorch
+  - pyg
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - python=3.11
+  - pip
+
+  # Scientific stack
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - tqdm
+  - pyyaml
+  - requests
+
+  # Chemistry / bio
+  - biopython
+  - rdkit
+  - openbabel
+  - vina
+  - smina
+  - gemmi
+
+  # PyTorch
+  - pytorch
+  - torchvision
+  - torchaudio
+
+  # Graph ML
+  - pyg
+  - torch-geometric
+
+  # Testing / notebooks
+  - pytest
+  - jupyterlab
+  - ipykernel
+
+  # Pip packages
+  - pip:
+      - meeko
+      - pubchempy
+      - smallworld-api

@@ -1,0 +1,6 @@
+Name,SMILES,Target,Role
+Indinavir,CC(C)(C)NC(=O)C1CC2CCCCC2CN1CC(O)CC(Cc1ccccc1)C(=O)NC1c2ccccc2CC1O,HIVPRO_1HSG,seed
+Ritonavir,CC(C)c1nc(cs1)CN(C)C(=O)NC(C(=O)NC(CC1CCCCC1)C(O)CN1CC2CCCCC2CC1=O)C(C)C,HIVPRO_1HSG,seed
+Saquinavir,CC(C)(C)NC(=O)C1CC2CCCCC2CN1CC(O)C(Cc1ccccc1)NC(=O)C(CC(N)=O)NC(=O)c1ccc2ccccc2n1,HIVPRO_1HSG,seed
+Nelfinavir,Oc1ccc(cc1)C1CC(=O)N(C1CC(O)C(Cc1ccccc1)NC(=O)C(C)c1ccccn1)CSCC(=O)N,HIVPRO_1HSG,seed
+Lopinavir,CC(C)c1nc(cs1)CN(C)C(=O)NC(C(=O)NC(Cc1ccccc1)CC(O)C(Cc1ccccc1)NC(=O)COc1c(C)cccc1C)C(C)C,HIVPRO_1HSG,seed
